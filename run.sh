@@ -2,4 +2,4 @@
 
 set -e
 
-./build/Patrik
+./build/ASIOServer

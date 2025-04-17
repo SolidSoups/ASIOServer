@@ -11,10 +11,12 @@ add_executable(${PROJECT_NAME}
   main.cpp
 )
 
-# Asio is a header library, so this should
-# be all we need
 target_include_directories(${PROJECT_NAME}
   PRIVATE
-  libs/asio-1.30.2/include
-  NetCommon
+    NetCommon
+)
+
+target_include_directories(${PROJECT_NAME}
+  PRIVATE
+    libs/asio-1.30.2/include
 )
