@@ -49,7 +49,6 @@ compile_commands.json
 CTestTestfile.cmake
 _deps
 
-build/
 
 ### CMake Patch ###
 CMakeUserPresets.json
@@ -58,3 +57,7 @@ CMakeUserPresets.json
 *-prefix/
 
 # End of https://www.toptal.com/developers/gitignore/api/cmake,c++
+
+# Beginning of Elias
+build/
+.cache/
