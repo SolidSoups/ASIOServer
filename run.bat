@@ -2,5 +2,5 @@
 chcp 65001 >nul
 setlocal
 
-echo 🏎️ Running executable...
-build\ASIOServer.exe
+echo 🚀 Starting ASIOServer...
+build\bin\ASIOServer.exe

@@ -5,9 +5,8 @@ project(NetClient)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# Include NetCommon from relative path
+# Include paths
 set(ASIO_INCLUDE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/../libs/asio-1.30.2/include)
-add_subdirectory(../NetCommon ${CMAKE_CURRENT_BINARY_DIR}/NetCommonBuild)
 
 # Source files
 set(SOURCES
@@ -22,6 +21,7 @@ target_include_directories(NetClient
     ${CMAKE_CURRENT_SOURCE_DIR}
   PRIVATE
     ${ASIO_INCLUDE_PATH}
+    ${CMAKE_CURRENT_SOURCE_DIR}/../NetCommon
 )
 
 target_link_libraries(NetClient

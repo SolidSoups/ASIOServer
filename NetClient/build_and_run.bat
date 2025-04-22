@@ -8,7 +8,5 @@ if %ERRORLEVEL% NEQ 0 (
     exit /b %ERRORLEVEL%
 )
 
-echo ✅ Build successful, starting server...
-call run.bat
-
-echo FINISHED
+echo ✅ Build successful, starting NetClientTest...
+call run.bat 

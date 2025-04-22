@@ -1,5 +1,4 @@
 #!/bin/bash
 
-set -e
-
-./build/ASIOServer
+echo "🚀 Starting ASIOServer..."
+./build/bin/ASIOServer

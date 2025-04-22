@@ -1,0 +1,114 @@
+// CMakeLists.txt
+cmake_minimum_required(VERSION 3.16)
+project(SimpleServer)
+
+# C++ standard
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+# ASIO + NetCommon
+set(ASIO_INCLUDE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/../libs/asio-1.30.2/include)
+add_subdirectory(../NetCommon ${CMAKE_CURRENT_BINARY_DIR}/NetCommonBuild)
+
+# Our library source (SimpleServer.cpp only!)
+set(SOURCES
+  SimpleServer.cpp
+)
+
+add_library(${PROJECT_NAME} STATIC ${SOURCES})
+
+target_include_directories(${PROJECT_NAME} 
+  PUBLIC
+    ${CMAKE_CURRENT_SOURCE_DIR}
+    ${ASIO_INCLUDE_PATH}
+)
+
+target_link_libraries(${PROJECT_NAME}
+  PUBLIC NetCommon
+)
+
+# The executable: ONLY main.cpp
+add_executable(NetServerTest main.cpp)
+
+target_link_libraries(NetServerTest
+  PRIVATE ${PROJECT_NAME}
+)
+
+// SimpleServer.h
+#include "olc_net.h"
+
+enum class CustomMsgTypes : uint32_t
+{
+  ServerAccept,
+  ServerDeny,
+  ServerPing,
+  MessageAll,
+  ServerMessage,
+};
+using CustomConnection = olc::net::connection<CustomMsgTypes>;
+using CustomMessage = olc::net::message<CustomMsgTypes>;
+
+class CustomServer : public olc::net::server_interface<CustomMsgTypes>
+{
+public:
+  CustomServer(uint16_t nPort);
+
+protected:
+  virtual bool OnClientConnect(std::shared_ptr<CustomConnection> client);
+
+  virtual void OnClientDisconnect(std::shared_ptr<CustomConnection> client);
+
+  virtual void OnMessage(std::shared_ptr<CustomConnection> client, CustomMessage& msg);
+};
+
+// SimpleServer.cpp
+#include "SimpleServer.h"
+
+CustomServer::CustomServer(uint16_t nPort) : olc::net::server_interface<CustomMsgTypes>(nPort){
+
+}
+
+bool CustomServer::OnClientConnect(std::shared_ptr<CustomConnection> client)
+{
+  return true;
+}
+
+void CustomServer::OnClientDisconnect(std::shared_ptr<CustomConnection> client)
+{
+
+}
+
+void CustomServer::OnMessage(std::shared_ptr<CustomConnection> client, CustomMessage& msg)
+{
+
+}
+
+// main.cpp
+#include "SimpleServer.h"
+
+int main()
+{
+  CustomServer server(60000);
+  server.Start();
+
+  while (1)
+  {
+    server.Update();
+  }
+
+  return 0;
+}
+
+
+// THIS IS THE ERROR IN QUESTION
+❯❯ NetServer git:(main) 17:27 cmake --build build --verbose
+Change Dir: 'C:/Users/wiley/repos/ASIOServer/NetServer/build'
+
+Run Build Command(s): C:/PROGRA~1/CMake/bin/ninja.exe -v
+[1/1] C:\WINDOWS\system32\cmd.exe /C "cd . && C:\msys64\ucrt64\bin\c++.exe   CMakeFiles/NetServerTest.dir/main.cpp.obj -o NetServerTest.exe -Wl,--out-implib,libNetServerTest.dll.a -Wl,--major-image-version,0,--minor-image-version,0  libSimpleServer.a  NetCommonBuild/libNetCommon.a  -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32 && cd ."
+FAILED: NetServerTest.exe
+C:\WINDOWS\system32\cmd.exe /C "cd . && C:\msys64\ucrt64\bin\c++.exe   CMakeFiles/NetServerTest.dir/main.cpp.obj -o NetServerTest.exe -Wl,--out-implib,libNetServerTest.dll.a -Wl,--major-image-version,0,--minor-image-version,0  libSimpleServer.a  NetCommonBuild/libNetCommon.a  -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32 && cd ."
+collect2.exe: error: ld returned 1 exit status
+ninja: build stopped: subcommand failed.
+
+❯❯ NetServer git:(main)  17:27

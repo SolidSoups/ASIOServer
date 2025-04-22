@@ -70,23 +70,23 @@ public:
           {
             std::cout << "[SERVER] New Connection: " << socket.remote_endpoint() << "\n";
 
-            // std::shared_ptr<connection<T>> newconn = std::make_shared<connection<T>>(
-            //     connection<T>::owner::server, m_asioContext, std::move(socket), m_qMessagesIn);
-            //
-            // // Give the user server a chance to deny connection
-            // if (OnClientConnect(newconn))
-            // {
-            //   // Connection allowed, so add to container of new connections
-            //   m_deqConnections.push_back(std::move(newconn));
-            //
-            //   m_deqConnections.back()->ConnectToClient(nIDCounter++);
-            //
-            //   std::cout << "[" << m_deqConnections.back()->GetID() << "] Connection Approved\n";
-            // }
-            // else
-            // {
-            //   std::cout << "[-----] Connection Denied\n";
-            // }
+            std::shared_ptr<connection<T>> newconn = std::make_shared<connection<T>>(
+                connection<T>::owner::server, m_asioContext, std::move(socket), m_qMessagesIn);
+
+            // Give the user server a chance to deny connection
+            if (OnClientConnect(newconn))
+            {
+              // Connection allowed, so add to container of new connections
+              m_deqConnections.push_back(std::move(newconn));
+
+              m_deqConnections.back()->ConnectToClient(nIDCounter++);
+
+              std::cout << "[" << m_deqConnections.back()->GetID() << "] Connection Approved\n";
+            }
+            else
+            {
+              std::cout << "[-----] Connection Denied\n";
+            }
           }
           else
           {
