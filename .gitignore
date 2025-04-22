@@ -61,3 +61,4 @@ CMakeUserPresets.json
 # Beginning of Elias
 build/
 .cache/
+.vscode/
