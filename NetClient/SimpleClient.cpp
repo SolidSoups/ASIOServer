@@ -29,15 +29,19 @@ public:
     msg << timeNow;
     Send(msg);
   }
+
+  void MessageAll()
+  {
+    olc::net::message<CustomMsgTypes> msg;
+    msg.header.id = CustomMsgTypes::MessageAll;
+    Send(msg);
+  }
 };
 
 int main()
 {
   CustomClient c;
   c.Connect("127.0.0.1", 60000);
-
-  bool key[3] = {false, false, false};
-  bool old_key[3] = {false, false, false};
 
   bool bQuit = false;
   while (!bQuit)
@@ -48,6 +52,8 @@ int main()
       if (ch == '1')
         c.PingServer();
       if (ch == '2')
+        c.MessageAll();
+      if (ch == '3')
         bQuit = true;
     }
 
@@ -59,6 +65,13 @@ int main()
 
         switch (msg.header.id)
         {
+          case CustomMsgTypes::ServerAccept:
+          {
+            // Server has responded to a ping request
+            std::cout << "Server Accepted Connection\n";
+          }
+          break;
+
           case CustomMsgTypes::ServerPing:
           {
             std::chrono::system_clock::time_point timeNow = std::chrono::system_clock::now();
@@ -66,6 +79,15 @@ int main()
             msg >> timeThen;
             std::cout << "Ping: " << std::chrono::duration<double>(timeNow - timeThen).count()
                       << "\n";
+          }
+          break;
+
+          case CustomMsgTypes::ServerMessage:
+          {
+            // Server has responded to a ping request
+            uint32_t clientID;
+            msg >> clientID;
+            std::cout << "Hello from [" << clientID << "]\n";
           }
           break;
         }

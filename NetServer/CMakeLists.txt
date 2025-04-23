@@ -9,7 +9,7 @@ set(NETCOMMON_INCLUDE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/../NetCommon)
 
 # Source files
 set(SOURCES
-  main.cpp
+  NetServer.cpp
 )
 
 # Create the NetServer library
@@ -32,7 +32,7 @@ if(WIN32)
 endif()
 
 # Create test executable
-add_executable(NetServerTest main.cpp)
+add_executable(NetServerTest NetServer.cpp)
 target_include_directories(NetServerTest 
   PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}

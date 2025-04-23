@@ -27,3 +27,4 @@ if %ERRORLEVEL% NEQ 0 (
 )
 
 echo ✅ Build complete! Executables are in %BUILD_DIR%\bin
+explorer.exe .\build\bin
