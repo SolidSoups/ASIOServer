@@ -1,5 +1,39 @@
-
+#ifdef _WIN32
 #include <conio.h>
+int getch()
+{
+  return _getch();
+}
+
+bool my_kbhit()
+{
+  return _kbhit();
+}
+
+#else
+#include <sys/ioctl.h>
+#include <termios.h>
+#include <unistd.h>
+
+bool my_kbhit()
+{
+  int count;
+  ioctl(STDIN_FILENO, FIONREAD, &count);
+  return count > 0;
+}
+
+int getch()
+{
+  struct termios oldt, newt;
+  tcgetattr(STDIN_FILENO, &oldt);
+  newt = oldt;
+  newt.c_lflag &= ~(ICANON | ECHO);
+  tcsetattr(STDIN_FILENO, TCSANOW, &newt);
+  int ch = getchar();
+  tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
+  return ch;
+}
+#endif
 
 #include <iostream>
 
@@ -46,7 +80,7 @@ int main()
   bool bQuit = false;
   while (!bQuit)
   {
-    if (_kbhit())
+    if (my_kbhit())
     {
       int ch = _getch();
       if (ch == '1')
