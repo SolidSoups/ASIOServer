@@ -26,7 +26,7 @@ target_include_directories(NetCommon
 target_compile_definitions(NetCommon 
   PUBLIC 
     ASIO_STANDALONE
-    _WIN32_WINNT=0x0A00  # Windows 10
+    # _WIN32_WINNT=0x0A00  # Windows 10
 )
 
 if(WIN32)
