@@ -26,7 +26,7 @@ protected:
     olc::net::message<CustomMsgTypes> msg;
     msg.header.id = CustomMsgTypes::ServerAccept;
     client->Send(msg);
-    
+
     return true;
   }
 
@@ -69,7 +69,7 @@ int main()
 
   while (1)
   {
-    server.Update();
+    server.Update(-1, true);
   }
 
   return 0;

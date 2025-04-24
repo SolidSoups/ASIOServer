@@ -21,11 +21,17 @@ add_executable(${PROJECT_NAME}
 
 target_link_libraries(${PROJECT_NAME} 
   PRIVATE
-    ws2_32
     NetCommon
     NetClient
-    NetServer
+    SimpleServer
 )
+
+if(WIN32)
+target_link_libraries(${PROJECT_NAME}
+  PRIVATE
+    ws2_32
+)
+endif()
 
 target_include_directories(${PROJECT_NAME}
   PRIVATE

@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.16)
-project(NetServer)
+project(SimpleServer)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -9,13 +9,13 @@ set(NETCOMMON_INCLUDE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/../NetCommon)
 
 # Source files
 set(SOURCES
-  NetServer.cpp
+  SimpleServer.cpp
 )
 
-# Create the NetServer library
-add_library(NetServer STATIC ${SOURCES})
+# Create the SimpleServer library
+add_library(SimpleServer STATIC ${SOURCES})
 
-target_include_directories(NetServer 
+target_include_directories(SimpleServer 
   PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}
   PRIVATE
@@ -24,15 +24,15 @@ target_include_directories(NetServer
 )
 
 # Link against NetCommon library
-target_link_libraries(NetServer PRIVATE NetCommon)
+target_link_libraries(SimpleServer PRIVATE NetCommon)
 
 if(WIN32)
   # Add required Windows libraries for ASIO
-  target_link_libraries(NetServer PRIVATE ws2_32 wsock32)
+  target_link_libraries(SimpleServer PRIVATE ws2_32 wsock32)
 endif()
 
 # Create test executable
-add_executable(NetServerTest NetServer.cpp)
+add_executable(NetServerTest SimpleServer.cpp)
 target_include_directories(NetServerTest 
   PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}
@@ -41,7 +41,7 @@ target_include_directories(NetServerTest
 )
 target_link_libraries(NetServerTest 
   PRIVATE 
-    NetServer
+    SimpleServer
     NetCommon
     ws2_32
     wsock32

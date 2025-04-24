@@ -79,7 +79,7 @@ public:
               // Connection allowed, so add to container of new connections
               m_deqConnections.push_back(std::move(newconn));
 
-              m_deqConnections.back()->ConnectToClient(nIDCounter++);
+              m_deqConnections.back()->ConnectToClient(this, nIDCounter++);
 
               std::cout << "[" << m_deqConnections.back()->GetID() << "] Connection Approved\n";
             }
@@ -112,13 +112,13 @@ public:
       OnClientDisconnect(client);
       client.reset();
       m_deqConnections.erase(std::remove(m_deqConnections.begin(), m_deqConnections.end(), client),
-                             m_deqConnections.end());
+          m_deqConnections.end());
     }
   }
 
   // Send message to all clients
-  void MessageAllClients(const message<T> &msg,
-                         std::shared_ptr<connection<T>> pIgnoreClient = nullptr)
+  void MessageAllClients(
+      const message<T> &msg, std::shared_ptr<connection<T>> pIgnoreClient = nullptr)
   {
     bool bInvalidClientExists = false;
 
@@ -145,8 +145,12 @@ public:
           std::remove(m_deqConnections.begin(), m_deqConnections.end(), nullptr));
   }
 
-  void Update(size_t nMaxMessages = -1)
+  void Update(size_t nMaxMessages = -1, bool bWait = false)
   {
+    // We don't need the server to occupy 100% of the CPU core
+    if (bWait)
+      m_qMessagesIn.wait();
+
     size_t nMessageCount = 0;
     while (nMessageCount < nMaxMessages && !m_qMessagesIn.empty())
     {
@@ -175,6 +179,12 @@ protected:
 
   // Called when a message arrives
   virtual void OnMessage(std::shared_ptr<connection<T>> client, message<T> &msg)
+  {
+  }
+
+public:
+  // Called when a client is validated
+  virtual void OnClientValidated(std::shared_ptr<connection<T>> client)
   {
   }
 
